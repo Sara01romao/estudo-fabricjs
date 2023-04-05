@@ -11,7 +11,9 @@
 <body>
     <!-- https://github.com/rodrigopandini/articles-fabric.js/blob/master/Part-1.md -->
 
-    <canvas id="c"></canvas>
+    <canvas id="imagem"></canvas>
+
+    <canvas id="svg-container"></canvas>
     
 
     
@@ -24,23 +26,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js" integrity="sha512-hOJ0mwaJavqi11j0XoBN1PtOJ3ykPdP6lp9n29WVVVVZxgx9LO7kMwyyhaznGJ+kbZrDN1jFZMt2G9bxkOHWFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <script>
-        var container = new fabric.Canvas('c'); 
+        var containerImg = new fabric.Canvas('imagem');
+        
+        
        
-       
+        
        
         //adiciona imagem 
-        fabric.Image.fromURL('./google.png', function(oImg) {
+        fabric.Image.fromURL('./google.png',  function(oImg) {
+
             oImg.scale(0.5).set('flipX', true)
             
-            container.add(oImg);
+            containerImg.add(oImg);
+            
         });
 
+
+       
+        
+
+        //adiciona svg
+        var containerSvg = new fabric.Canvas('svg-container');
+    
+        fabric.Image.fromURL('./moldura-svg.svg', function(oSvg){
+            containerSvg.add(oSvg);
+            
+        })
+
+        
         
     </script>
 
 
 <style>
-    #c{
+    #imagem{
         
         background: pink;
     }
