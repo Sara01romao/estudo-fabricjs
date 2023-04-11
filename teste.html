@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Editor de Imagem com Fabric.js</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+</head>
+<body>
+  
+
+  <canvas id="canvas" width="600" height="600"> </canvas>
+
+  <input type="file" id="inputImage" accept="image/*">
+  <button id="downloadButton">Baixar Imagem</button>
+
+  <style>
+    #canvas{
+      border: 1px solid red;
+       width:600px;
+       height: 600px;
+       margin: 0 auto;
+    }
+  </style>
+
+  <script>
+    // Inicializa o canvas
+    const canvas = new fabric.Canvas('canvas');
+
+    // Função para carregar a imagem de fundo
+    document.getElementById('inputImage').addEventListener('change', function(e) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const backgroundImage = new fabric.Image(img, {
+            scaleX: canvas.width / img.width,
+            scaleY: canvas.height / img.height,
+            //selectable: false,
+            
+          });
+          canvas.add(backgroundImage);
+          canvas.sendToBack(backgroundImage);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    });
+
+    // Função para adicionar a moldura
+    /*fabric.loadSVGFromString('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="100%" height="100%" fill="rgba(0,0,0,0.5)" /><rect x="50" y="50" width="300" height="300" fill="none" stroke="white" stroke-width="10" /></svg>', function(objects, options) {
+      const frameObject = fabric.util.groupSVGElements(objects, options);
+      frameObject.set({
+        left: 0,
+        top: 0,
+        selectable: false
+      });
+      canvas.add(frameObject);
+      canvas.sendToBack(frameObject);
+    });*/
+
+    fabric.Image.fromURL('./moldura2.svg', function(objects) {
+    const frameObject = objects
+    frameObject.set({
+        left: 0,
+        top: 0,
+        selectable: false
+    });
+    canvas.add(frameObject);
+    canvas.sendToBack(frameObject);
+    });
+
+    // Função para adicionar texto editável no centro acima da moldura
+    function addEditableText(text, topOffset) {
+      const textObject = new fabric.IText(text, {
+        left: canvas.width / 2,
+        top: canvas.height / 2 - 150 + topOffset,
+        originX: 'center',
+        originY: 'center',
+        fill: 'white',
+        transparentCorners: false,
+        textAlign: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      });
+
+      canvas.add(textObject);
+      canvas.setActiveObject(textObject);
+      canvas.renderAll();
+    }
+
+    // Adicionar texto 1 acima da moldura
+    addEditableText('Texto 1', -150);
+
+    // Adicionar texto 2 abaixo da moldura
+    addEditableText('Texto 2', 50);
+
+    // Função para baixar a imagem editada com a moldura
+    document.getElementById('downloadButton').addEventListener('click', function() {
+      const dataURL = canvas.toDataURL('png');
+      const link = document.createElement('a');
+      link.href = dataURL;
+      link.download = 'imagem_editada.png';
+      link.click();
+    });
+
+
+
+ /* fabric.loadSVGFromString('<svg width="2519" height="2536" viewBox="0 0 2519 2536" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="11.0059" y="2535.1" width="149" height="2507" transform="rotate(-90.0022 11.0059 2535.1)" fill="#FF7C1D" fill-opacity="0.5"/><rect x="0.00292969" y="150.049" width="149" height="2507" transform="rotate(-90 0.00292969 150.049)" fill="#25D366"/><rect x="2358" y="0.654297" width="149" height="2507" transform="rotate(-0.251723 2358 0.654297)" fill="#8E2828"/><rect y="1.6543" width="149" height="2507" transform="rotate(-0.251723 0 1.6543)" fill="#FAFF09"/></svg>', function(objects, options) {
+  const frameObject = fabric.util.groupSVGElements(objects, options);
+  frameObject.set({
+    left: 0,
+    top: 0,
+    selectable: false
+  });
+
+  // Salvar a moldura em formato JSON
+  const frameJSON = JSON.stringify(frameObject.toJSON());
+  console.log(frameJSON);
+
+  canvas.add(frameObject);
+  canvas.sendToBack(frameObject);
+});*/
+  </script>
+</body>
+</html>
